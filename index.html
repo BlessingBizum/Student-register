@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Register</title>
+    <style>
+        .student {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: whitesmoke;
+            color: black;
+        }
+        h3 {
+            margin-top: 20px;
+            font-size: 20px;
+            color: blue;
+        }
+        .section-heading {
+            margin-top: 30px;
+            font-size: 18px;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <main id="main-container"></main>
+    <div id="holder"></div>
+    <script>
+        let studentDetails = [{
+            name: "Austin",
+            class: "jss-1",
+            score: 60
+        },
+        {
+            name: "Benny",
+            class: "jss-2",
+            score: 40
+        },
+        {
+            name: "Sam",
+            class: "jss-2",
+            score: 50
+        },
+        {
+            name: "Jess",
+            class: "jss-1",
+            score: 30
+        },
+        {
+            name: "Jason",
+            class: "jss-2",
+            score: 70
+        },
+        {
+            name: "Mattew",
+            class: "jss-1",
+            score: 10
+        },
+        {
+            name: "Ethan",
+            class: "jss-2",
+            score: 80
+        },
+    ];
+
+        let holder = document.querySelector("#holder");
+
+        // Function to grade each student
+        function gradeStudent(student) {
+            let grade = "";
+            if (student.score >= 70 && student.score <= 100) {
+                grade = "A";
+            } else if (student.score >= 60 && student.score <= 69) {
+                grade = "B";
+            } else if (student.score >= 50 && student.score <= 59) {
+                grade = "C";
+            } else if (student.score >= 40 && student.score <= 49) {
+                grade = "D";
+            } else if (student.score >= 0 && student.score <= 39) {
+                grade = "F";
+            } else {
+                grade = "Unable to determine grade";
+            }
+
+            student.grade = grade; // Assign the grade to the student object
+
+            // Create a div to display the student's information
+            let studentDiv = document.createElement("div");
+            studentDiv.classList.add("student");
+            studentDiv.innerHTML = `
+                <p><strong>Name:</strong> ${student.name}</p>
+                <p><strong>Class:</strong> ${student.class}</p>
+                <p><strong>Score:</strong> ${student.score}</p>
+                <p><strong>Grade:</strong> ${grade}</p>
+            `;
+            return studentDiv;
+        }
+
+        // Grouping students by class
+        let groupedByClass = {};
+
+        // Sort students by class
+        studentDetails.forEach(student => {
+            if (!groupedByClass[student.class]) {
+                groupedByClass[student.class] = [];
+            }
+            groupedByClass[student.class].push(student);
+        });
+
+        // First display all students with a heading
+        let allStudentsHeading = document.createElement("h3");
+        allStudentsHeading.innerText = "Student Register";
+        holder.appendChild(allStudentsHeading);
+
+        studentDetails.forEach(student => {
+            let studentDiv = gradeStudent(student);
+            holder.appendChild(studentDiv);
+        });
+
+        // Now display students grouped by class
+        for (let className in groupedByClass) {
+            // Heading for each class group
+            let classHeading = document.createElement("h3");
+            classHeading.innerText = `${className}`;
+            classHeading.classList.add("section-heading");
+            holder.appendChild(classHeading);
+
+            // Display each student in the class
+            groupedByClass[className].forEach(student => {
+                let studentDiv = gradeStudent(student);
+                holder.appendChild(studentDiv);
+            });
+        }
+
+        // Group students by grade
+        let groupedByGrade = {
+            "A": [],
+            "B": [],
+            "C": [],
+            "D": [],
+            "F": []
+        };
+
+        // Add students to their grade categories
+        studentDetails.forEach(student => {
+            groupedByGrade[student.grade].push(student);
+        });
+
+        // Display students grouped by grade
+        let gradeSections = document.createElement("div");
+        gradeSections.classList.add("section-heading");
+        holder.appendChild(gradeSections);
+
+        for (let grade in groupedByGrade) {
+            // Heading for each grade group
+            let gradeHeading = document.createElement("h3");
+            gradeHeading.innerText = `Students with Grade ${grade}`;
+            gradeSections.appendChild(gradeHeading);
+
+            // Display each student with this grade
+            groupedByGrade[grade].forEach(student => {
+                let studentDiv = gradeStudent(student);
+                gradeSections.appendChild(studentDiv);
+            });
+        }
+    </script>
+</body>
+</html>
